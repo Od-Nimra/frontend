@@ -1,0 +1,82 @@
+<div class="p-4 md:p-6 font-[Poppins,sans-serif] bg-[#000103] text-white min-h-screen">
+
+  <!-- 🧾 Header -->
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold text-[#0082FB]">📅 IV BCA Cloud B – Timetable</h2>
+    <button (click)="printTimetable()" class="bg-[#0082FB] hover:bg-[#009CFF] text-white px-4 py-1.5 rounded-md text-sm shadow hover:shadow-[0_0_10px_#0082FB] transition">
+      🖨️ Print
+    </button>
+  </div>
+
+  <!-- 🖥️ DESKTOP TABLE -->
+  <div class="hidden sm:block overflow-x-auto max-w-[90vw] mx-auto border border-[#0082FB]/30 rounded-xl shadow-md backdrop-blur-md" id="timetable-print">
+    <ng-container *ngIf="getClassHours().length">
+      <table class="w-full text-sm border-collapse text-left">
+        <thead>
+          <tr class="bg-[#0082FB]/10 text-[#8AD5FF] text-sm">
+            <th class="border border-[#0082FB]/20 px-3 py-3 sticky left-0 bg-[#000103] backdrop-blur-md z-10 w-24">Day</th>
+            <th *ngFor="let hour of getClassHours()" class="border border-[#0082FB]/20 px-3 py-3 whitespace-nowrap">{{ hour }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let day of fullTimetable">
+            <td class="border border-[#0082FB]/20 px-3 py-2 sticky left-0 bg-[#000103] backdrop-blur-md z-10 font-medium text-white">
+              {{ day.day }}
+            </td>
+            <ng-container *ngFor="let hour of getClassHours()">
+              <td
+                class="border border-[#0082FB]/20 px-3 py-2 hover:bg-[#0082FB]/10 transition-all cursor-pointer"
+                (click)="openClassDetails(getClassByDayAndHour(day.day, hour)!)"
+              >
+                <ng-container *ngIf="getClassByDayAndHour(day.day, hour) as slot">
+                  <div class="font-medium text-white text-sm">{{ slot.course }}</div>
+                  <div class="text-xs text-[#8AD5FF]">{{ slot.faculty }}</div>
+                  <div class="text-xs text-[#7ca5cd]">{{ slot.room }}</div>
+                </ng-container>
+              </td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+  </div>
+
+  <!-- 📱 MOBILE VIEW BY DAY -->
+  <div class="block sm:hidden space-y-4 mt-6 text-[13px]">
+    <ng-container *ngFor="let day of fullTimetable">
+      <div class="bg-[#0c1628] border border-[#0082FB]/20 rounded-xl overflow-hidden">
+        <div class="bg-[#0082FB]/10 text-[#8AD5FF] px-3 py-2 font-semibold border-b border-[#0082FB]/20 text-sm">{{ day.day }}</div>
+        <div class="divide-y divide-[#0082FB]/10">
+          <ng-container *ngFor="let hour of getClassHours()">
+            <ng-container *ngIf="getClassByDayAndHour(day.day, hour) as slot; else noClass">
+              <div
+                (click)="openClassDetails(slot)"
+                class="px-3 py-2 hover:bg-[#0082FB]/10 hover:shadow-[0_0_8px_#0082FB] transition cursor-pointer"
+              >
+                <div class="text-white font-semibold text-sm">{{ slot.course }}</div>
+                <div class="text-xs text-[#8AD5FF]">{{ slot.faculty }}</div>
+                <div class="text-[11px] text-[#7ca5cd]">{{ slot.room }}</div>
+                <div class="text-[11px] text-[#0082FB] font-medium mt-1">{{ hour }}</div>
+              </div>
+            </ng-container>
+            <ng-template #noClass>
+              <div class="px-3 py-2 text-xs text-gray-500 italic">No class at {{ hour }}</div>
+            </ng-template>
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- ℹ️ MODAL -->
+  <div *ngIf="selectedClass" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-[#0d1117] border border-[#0082FB]/30 text-white p-5 rounded-xl shadow-xl w-[90%] max-w-sm relative">
+      <button class="absolute top-2 right-3 text-gray-400 hover:text-red-500 text-xl" (click)="selectedClass = null">✕</button>
+      <h2 class="text-lg font-bold text-[#0082FB] mb-2">{{ selectedClass.course }}</h2>
+      <p><span class="font-medium text-gray-300">Faculty:</span> {{ selectedClass.faculty }}</p>
+      <p><span class="font-medium text-gray-300">Room:</span> {{ selectedClass.room }}</p>
+      <p><span class="font-medium text-gray-300">Hour:</span> {{ selectedClass.hour }}</p>
+    </div>
+  </div>
+
+</div>

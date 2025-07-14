@@ -1,0 +1,120 @@
+<div
+  class="relative min-h-screen w-full overflow-y-auto bg-gradient-to-br from-blue-100 via-white to-indigo-100 flex flex-col md:justify-center items-center px-4 py-6">
+
+  <!-- Decorative Background Blobs -->
+  <div
+    class="absolute w-64 h-64 sm:w-80 sm:h-80 bg-blue-200 rounded-[60%] blur-3xl opacity-60 top-[-4rem] left-[-4rem] z-0">
+  </div>
+  <div
+    class="absolute w-72 h-72 sm:w-96 sm:h-96 bg-indigo-200 rounded-[50%] blur-3xl opacity-50 bottom-[-6rem] right-[-5rem] rotate-45 z-0">
+  </div>
+  <div
+    class="absolute w-64 h-64 sm:w-80 sm:h-80 bg-purple-100 rounded-[55%] blur-2xl opacity-50 top-1/3 left-[-5rem] rotate-12 z-0">
+  </div>
+
+  <!-- Decorative SVG -->
+  <svg class="absolute w-full h-full opacity-5 pointer-events-none z-0" xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 800 600" fill="none">
+    <path fill="#3B82F6" d="M400 150c100 50 150 150 100 200s-150 50-250 0S100 250 150 200s150-100 250-50Z" />
+  </svg>
+
+  <!-- Login Card -->
+  <div
+    class="relative z-10 max-w-[90%] sm:max-w-md w-full bg-white rounded-2xl shadow-2xl px-6 py-6 sm:px-10 sm:py-8 flex flex-col gap-4">
+
+    <!-- Logo -->
+    <div class="flex justify-center -mt-4">
+      <img src="assets/logo.png" alt="CampusConnect Logo" class="w-32 sm:w-40 md:w-48 animate-fade-in" />
+    </div>
+
+    <!-- Welcome Text -->
+    <div class="mb-2 text-center">
+      <h2 class="text-2xl sm:text-3xl font-bold text-blue-800">Welcome Back!</h2>
+      <p class="text-sm text-gray-600">Sign in to continue to Student Orbit</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-4 w-full" novalidate>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Email</label>
+        <input formControlName="email" type="email" placeholder="Enter your Email"
+          class="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          (input)="onEmailChange()"
+          [class.border-red-500]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" />
+
+        <div *ngIf="loginForm.get('email')?.errors?.['required'] && loginForm.get('email')?.touched"
+          class="text-red-500 text-sm">
+          Email is required
+        </div>
+        <div *ngIf="loginForm.get('email')?.errors?.['email'] && loginForm.get('email')?.touched"
+          class="text-red-500 text-sm">
+          Invalid email format
+        </div>
+      </div>
+
+      <!-- Password -->
+<div>
+  <label class="block text-sm font-medium text-gray-700">Password</label>
+  <div class="relative">
+    <input
+      formControlName="password"
+      [type]="showLoginPassword ? 'text' : 'password'"
+      placeholder="Enter your password"
+      class="w-full pr-10 px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+      [class.border-red-500]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" />
+
+    <button type="button"
+      (click)="showLoginPassword = !showLoginPassword"
+      class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
+      <svg *ngIf="!showLoginPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+        viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7S3.732 16.057 2.458 12z" />
+      </svg>
+      <svg *ngIf="showLoginPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+        viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M3 3l18 18M10.477 10.477a3 3 0 104.243 4.243M12 5c4.478 0 8.268 2.943 9.543 7a9.97 9.97 0 01-4.187 5.095M6.875 6.875A9.964 9.964 0 002.457 12a9.969 9.969 0 004.095 5.093" />
+      </svg>
+    </button>
+  </div>
+
+  <div *ngIf="loginForm.get('password')?.errors?.['required'] && loginForm.get('password')?.touched"
+    class="text-red-500 text-sm">
+    Password is required
+  </div>
+  <div *ngIf="loginForm.get('password')?.errors?.['minlength'] && loginForm.get('password')?.touched"
+    class="text-red-500 text-sm">
+    Password must be at least 6 characters
+  </div>
+</div>
+
+
+      <!-- Links -->
+      <div class="flex justify-between text-sm">
+        <a routerLink="/forgotpass" class="text-blue-500 hover:underline">Forgot Password?</a>
+        <a routerLink="/signup" class="text-blue-500 hover:underline">Don't have an account?</a>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit"
+        class="w-full py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition">
+        Sign in
+      </button>
+    </form>
+  </div>
+  <div *ngIf="showToast" class="fixed top-5 right-5 z-50">
+  <div
+    [ngClass]="{
+      'bg-green-500': toastType === 'success',
+      'bg-red-500': toastType === 'error'
+    }"
+    class="text-white px-4 py-3 rounded-lg shadow-lg transition-opacity duration-200 animate-fade-in"
+  >
+    {{ toastMessage }}
+  </div>
+</div>
+
+</div>

@@ -1,0 +1,93 @@
+<div class="bg-[#000103] text-white rounded-2xl shadow-lg p-6 md:p-10 max-w-4xl mx-auto mt-10 relative font-[Poppins,sans-serif] border border-[#0082FB]/30 animate-fade-in">
+
+  <!-- 📸 Poster -->
+  <img src="assets/card1 (1).jpg" alt="Event Poster"
+       class="rounded-xl w-full h-auto object-cover mb-6 shadow-lg hover:shadow-[0_0_25px_#0082FB] transition-transform duration-300 hover:scale-105" />
+
+  <!-- 📝 Title -->
+  <h1 class="text-2xl md:text-3xl font-extrabold text-white mb-2 leading-snug">
+    10th International Conference on "Sustainable Economic Growth through Digital Revolution"
+  </h1>
+
+  <!-- 🏷️ Department -->
+  <p class="text-[#50bfff] text-sm font-medium mb-4">
+    Department of Commerce - UG
+  </p>
+
+  <!-- 📅 Event Info -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6 text-sm text-white">
+    <div class="flex items-start gap-3">
+      <img src="assets/clock-3.png" alt="Time" class="w-5 h-5 mt-1" />
+      <div>
+        <p class="font-semibold text-[#8AD5FF]">Event Date & Time</p>
+        <p class="text-white">Sep 25, 2025 · 9:00 AM – Sep 26, 2025 · 5:00 PM</p>
+      </div>
+    </div>
+
+    <div class="flex items-start gap-3">
+      <img src="assets/map-pin.png" alt="Location" class="w-5 h-5 mt-1" />
+      <div>
+        <p class="font-semibold text-[#8AD5FF]">Venue</p>
+        <p class="text-white">Kristu Jayanti College</p>
+      </div>
+    </div>
+
+    <div class="flex items-start gap-3">
+      <img src="assets/calendar-check-2.png" alt="Register" class="w-5 h-5 mt-1" />
+      <div>
+        <p class="font-semibold text-[#8AD5FF]">Registration Window</p>
+        <p class="text-white">Jan 16 – Sep 26, 2025 · 10:00 AM</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 📃 Description -->
+  <div class="mb-24">
+    <h2 class="text-lg font-semibold text-[#8AD5FF] mb-2">Event Description</h2>
+    <p class="text-gray-300 text-sm leading-relaxed">
+      Join us for an insightful exploration of sustainable economic growth strategies through digital transformation.
+      Industry leaders and academicians will share their experiences and research. Don’t miss this opportunity to
+      connect, learn, and grow!
+    </p>
+  </div>
+
+  <!-- ✅ RSVP Buttons -->
+  <div class="absolute bottom-6 right-6">
+    <button 
+      *ngIf="rsvpStatus === 'none'" 
+      (click)="onRsvpClick()" 
+      class="bg-[#0082FB] hover:bg-[#009CFF] text-white px-6 py-2 rounded-lg shadow hover:shadow-[0_0_10px_#0082FB] transition">
+      RSVP
+    </button>
+
+    <div *ngIf="rsvpStatus === 'going'" class="flex gap-2 items-center">
+      <button class="bg-[#0082FB] text-white px-6 py-2 rounded-lg shadow" disabled>
+        RSVP'd
+      </button>
+      <button (click)="openEditRsvp()" class="underline text-sm text-[#50bfff] hover:text-blue-300">Edit RSVP</button>
+    </div>
+  </div>
+
+  <!-- 🔒 RSVP Confirmation Modal -->
+  <div *ngIf="showGoingModal" class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
+    <div class="bg-[#0d1117] text-white p-6 rounded-xl shadow-2xl border border-[#0082FB]/30 w-[320px] text-center animate-fade-in">
+      <img src="assets/circle-check-big.png" alt="Confirmed" class="w-10 h-10 mx-auto mb-2" />
+      <h2 class="font-bold text-xl text-[#0082FB]">You’re Going!</h2>
+      <p class="text-gray-400 text-sm mb-4">Check your email for the RSVP details.</p>
+      <button (click)="confirmRsvp()" class="bg-[#0082FB] hover:bg-[#009CFF] text-white px-4 py-2 rounded transition">
+        Okay
+      </button>
+    </div>
+  </div>
+
+  <!-- ✏️ RSVP Edit Modal -->
+  <div *ngIf="showEditModal" class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
+    <div class="bg-[#0d1117] text-white p-6 rounded-xl shadow-2xl border border-[#0082FB]/30 w-[320px] text-center animate-fade-in">
+      <h2 class="font-bold text-xl text-[#0082FB] mb-4">Are you still going?</h2>
+      <div class="flex justify-center gap-4">
+        <button (click)="setEditRsvp('yes')" class="bg-[#0082FB] text-white px-4 py-2 rounded hover:bg-[#009CFF]">Yes</button>
+        <button (click)="setEditRsvp('no')" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">No</button>
+      </div>
+    </div>
+  </div>
+</div>

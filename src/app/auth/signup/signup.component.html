@@ -1,0 +1,134 @@
+<div class="min-h-screen overflow-y-auto flex flex-col md:flex-row">
+
+  <div class="w-full md:w-1/2 relative flex items-center justify-center bg-white overflow-hidden py-12 px-4 sm:px-6">
+    <div class="absolute w-[16rem] h-[16rem] sm:w-[20rem] sm:h-[20rem] bg-blue-200 rounded-[60%] blur-3xl opacity-60 top-10 left-[-4rem] transform rotate-12"></div>
+    <div class="absolute w-[20rem] h-[20rem] sm:w-[28rem] sm:h-[28rem] bg-indigo-200 rounded-[50%] blur-3xl opacity-50 bottom-[-5rem] right-[-6rem] rotate-45"></div>
+
+    <svg class="absolute w-full h-full opacity-15 pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+      <path fill="#3B82F6" d="M400 150c100 50 150 150 100 200s-150 50-250 0S100 250 150 200s150-100 250-50Z" />
+    </svg>
+
+    <div class="bg-white/50 p-6 sm:p-8 rounded-2xl w-full max-w-md">
+      <img src="assets/logo.png" alt="Student Orbit Logo" class="w-48 sm:w-72 md:w-[22rem] lg:w-[28rem] mx-auto animate-fade-in" />
+      <div class="text-center mt-4">
+        <h1 class="text-lg sm:text-xl font-semibold text-gray-700">Welcome to Student Orbit</h1>
+        <p class="text-sm text-gray-500">Your digital campus experience begins here</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="w-full md:w-1/2 bg-gradient-to-br from-blue-400 via-blue-200 to-blue-400 flex items-center justify-center px-4 py-10 sm:px-8">
+    <form #signupForm="ngForm" (ngSubmit)="onSubmit()"
+      class="w-full max-w-md sm:max-w-lg bg-white rounded-2xl shadow-2xl p-6 sm:p-10 md:p-12" novalidate>
+
+      <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-2 text-center">Create your account</h2>
+      <p class="text-sm text-center text-gray-600 mb-6">Get started with your campus journey.</p>
+
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+        <input type="text" name="fullName" [(ngModel)]="formData.fullName" (ngModelChange)="updateSession()" #fullName="ngModel"
+          class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          required />
+        <p *ngIf="fullName.invalid && fullName.touched" class="text-red-600 text-xs mt-1">Full name is required.</p>
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+        <input type="email" name="email" [(ngModel)]="formData.email" (ngModelChange)="updateSession()" #email="ngModel"
+          class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          required email />
+        <p *ngIf="email.invalid && email.touched" class="text-red-600 text-xs mt-1">Please enter a valid email.</p>
+      </div>
+
+      <div class="mb-4">
+  <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+  <div class="relative">
+    <input
+      [type]="showPassword ? 'text' : 'password'"
+      name="password"
+      [(ngModel)]="formData.password"
+      #password="ngModel"
+      required
+      minlength="6"
+      class="w-full pr-10 px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+
+    <button
+      type="button"
+      (click)="showPassword = !showPassword"
+      class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
+      <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+        viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7S3.732 16.057 2.458 12z" />
+      </svg>
+      <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+        viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M3 3l18 18M10.477 10.477a3 3 0 104.243 4.243M12 5c4.478 0 8.268 2.943 9.543 7a9.97 9.97 0 01-4.187 5.095M6.875 6.875A9.964 9.964 0 002.457 12a9.969 9.969 0 004.095 5.093" />
+      </svg>
+    </button>
+  </div>
+
+  <p *ngIf="password.invalid && password.touched" class="text-red-600 text-xs mt-1">
+    Password must be at least 6 characters.
+  </p>
+</div>
+
+      <div class="flex flex-col sm:flex-row gap-4 mb-6">
+        <div class="w-full sm:w-1/2">
+          <select name="department" [(ngModel)]="formData.department" (ngModelChange)="updateSession()" #department="ngModel"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            required>
+            <option disabled value="">Department</option>
+            <option>BCA</option>
+            <option>MCA</option>
+            <option>BSC</option>
+            <option>MSC</option>
+            <option>BCA CLOUD</option>
+          </select>
+          <p *ngIf="department.invalid && department.touched" class="text-red-600 text-xs mt-1">Please select a department.</p>
+        </div>
+
+        <div class="w-full sm:w-1/2">
+          <select name="semester" [(ngModel)]="formData.semester" (ngModelChange)="updateSession()" #semester="ngModel"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            required>
+            <option disabled value="">Semester</option>
+            <option>1st sem</option>
+            <option>2nd sem</option>
+            <option>3rd sem</option>
+            <option>4th sem</option>
+            <option>5th sem</option>
+            <option>6th sem</option>
+          </select>
+          <p *ngIf="semester.invalid && semester.touched" class="text-red-600 text-xs mt-1">Please select a semester.</p>
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="signupForm.invalid"
+        class="w-full bg-[#3E5C9E] text-white py-2 rounded-md font-semibold hover:opacity-90 transition duration-300 disabled:opacity-50">
+        Sign up
+      </button>
+
+      <p class="text-sm text-center mt-4 text-gray-600">
+        Already have an account?
+        <a routerLink="/login" class="text-blue-700 hover:underline font-medium">Sign in!</a>
+      </p>
+    </form>
+  </div>
+
+<div *ngIf="showToast" class="fixed top-5 right-5 z-50">
+  <div
+    [ngClass]="{
+      'bg-green-500': toastType === 'success',
+      'bg-red-500': toastType === 'error'
+    }"
+    class="text-white px-4 py-3 rounded-lg shadow-lg transition-opacity duration-200 animate-fade-in"
+  >
+    {{ toastMessage }}
+  </div>
+</div>
+
+</div>

@@ -1,0 +1,97 @@
+<div class="flex min-h-screen font-[Poppins,sans-serif] bg-[#000103] text-white">
+
+  <!-- 📱 Mobile Hamburger -->
+  <button
+    class="md:hidden fixed top-4 left-4 z-50 p-2 bg-[#000103] border border-[#0082FB]/40 rounded shadow"
+    (click)="toggleMobileSidebar()"
+  >
+    <svg class="w-6 h-6 text-[#0082FB]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
+  </button>
+
+  <!-- 🌌 Sticky Sidebar -->
+  <aside
+  [ngClass]="{
+    'w-64': sidebarOpen,
+    'w-20': !sidebarOpen,
+    'md:translate-x-0': true,
+    'translate-x-0': mobileSidebarOpen,
+    'hidden md:flex': !mobileSidebarOpen
+  }"
+  class="sticky top-0 md:relative z-40 h-screen bg-[#000103] border-r border-[#0082FB]/30 transition-all duration-300 flex-col shadow-[0_0_15px_#0082FB]/20 md:flex"
+>
+
+
+    <!-- 🔷 Logo Section -->
+    <div class="flex items-center justify-between p-4 border-b border-[#0082FB]/20">
+      <div *ngIf="sidebarOpen || mobileSidebarOpen" class="flex items-center gap-2">
+        <img src="assets/logo.jpg" alt="Logo" class="w-32 h-auto rounded" />
+      </div>
+      <button (click)="toggleSidebar()" class="hidden md:block p-1 hover:bg-[#0082FB]/10 rounded">
+        <svg *ngIf="sidebarOpen" class="h-5 w-5 text-[#0082FB]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        <svg *ngIf="!sidebarOpen" class="h-5 w-5 text-[#0082FB]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- 🌐 Navigation -->
+    <nav class="flex-1 overflow-y-auto px-3 py-4 custom-scrollbar">
+      <ng-container *ngFor="let item of menuItems">
+        <a
+          [routerLink]="item.path"
+          routerLinkActive="bg-[#0082FB]/20 text-[#0082FB] font-semibold"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="closeMobileSidebar()"
+          class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#0082FB]/10 hover:shadow-[0_0_10px_#0082FB] transition-all"
+          [ngClass]="{ 'justify-center': !sidebarOpen && !mobileSidebarOpen }"
+        >
+          <img [src]="item.icon" class="w-5 h-5" />
+          <span *ngIf="sidebarOpen || mobileSidebarOpen" class="truncate">{{ item.label }}</span>
+        </a>
+      </ng-container>
+    </nav>
+
+    <!-- 🙋‍♀️ Profile + Logout -->
+    <div class="p-4 border-t border-[#0082FB]/20 space-y-2">
+      <a
+        routerLink="/profile"
+        routerLinkActive="bg-[#0082FB]/20 text-[#0082FB] font-semibold"
+        class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#0082FB]/10 hover:shadow-[0_0_12px_#0082FB]"
+        [ngClass]="{ 'justify-center': !sidebarOpen && !mobileSidebarOpen }"
+      >
+        <img src="assets/icons/profile.svg" class="w-5 h-5 rounded-full" />
+        <span *ngIf="sidebarOpen || mobileSidebarOpen">Profile</span>
+      </a>
+
+      <button
+        (click)="openLogoutModal()"
+        class="flex items-center gap-3 text-red-400 px-3 py-2 w-full rounded-lg hover:bg-red-500/10 hover:shadow-[0_0_12px_#ff5555]"
+        [ngClass]="{ 'justify-center': !sidebarOpen && !mobileSidebarOpen }"
+      >
+        <img src="assets/log-out.png" class="w-5 h-5" />
+        <span *ngIf="sidebarOpen || mobileSidebarOpen">Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- 📄 Main Content Area -->
+  <main class="flex-1 overflow-y-auto h-screen bg-[#000103] text-white p-4 md:p-6">
+    <router-outlet></router-outlet>
+  </main>
+</div>
+
+<!-- 🔐 Logout Modal -->
+<div *ngIf="showLogoutModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+  <div class="bg-[#0d1117] text-white p-6 rounded-xl shadow-2xl border border-[#0082FB]/30 w-full max-w-sm">
+    <h3 class="text-lg font-semibold mb-4 text-[#0082FB]">Confirm Logout</h3>
+    <p class="text-gray-300 mb-6">Are you sure you want to logout?</p>
+    <div class="flex justify-end gap-3">
+      <button (click)="cancelLogout()" class="px-4 py-2 rounded bg-gray-600 hover:bg-gray-700">Cancel</button>
+      <button (click)="confirmLogout()" class="px-4 py-2 rounded bg-red-500 hover:bg-red-600">Logout</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,26 @@
+/* Make table scrollable on mobile vertically */
+@media (max-width: 768px) {
+  #timetable-print {
+    overflow-x: auto;
+  }
+  
+
+  table {
+    font-size: 12px;
+  }
+
+  th, td {
+    padding: 6px !important;
+  }
+
+  td div {
+    line-height: 1.1;
+  }
+}
+@media (max-width: 768px) {
+  .modal-content {
+    font-size: 14px;
+    padding: 1rem;
+  }
+}
+

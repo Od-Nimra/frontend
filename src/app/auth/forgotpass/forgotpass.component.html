@@ -1,0 +1,194 @@
+<form [formGroup]="form"
+  class="min-h-screen overflow-y-auto flex flex-col justify-center bg-gradient-to-br from-blue-50 via-white to-blue-100 relative">
+
+  <!-- Animated Blobs (Background) -->
+  <div class="fixed inset-0 -z-10 overflow-hidden">
+    <div
+      class="absolute w-80 sm:w-[30rem] h-80 sm:h-[30rem] bg-blue-200 opacity-20 rounded-full blur-[120px] top-[-8rem] left-[-10rem] animate-blob1">
+    </div>
+    <div
+      class="absolute w-64 sm:w-[25rem] h-64 sm:h-[25rem] bg-white opacity-25 rounded-full blur-[100px] bottom-[10%] left-[20%] animate-blob2">
+    </div>
+    <div
+      class="absolute w-56 sm:w-[20rem] h-56 sm:h-[20rem] bg-indigo-100 opacity-30 rounded-full blur-[90px] top-[40%] right-[5%] animate-blob3">
+    </div>
+  </div>
+
+  <!-- Back to Login Button -->
+  <div class="fixed top-10 right-8 z-20">
+    <a routerLink="/login"
+      class="text-sm sm:text-base text-blue-600 hover:text-white hover:bg-blue-500 transition-all duration-300 bg-white/80 px-4 py-2 border border-blue-200 rounded-full shadow-lg backdrop-blur-md hover:shadow-xl transform hover:scale-105">
+      <i class="fas fa-arrow-left mr-1"></i><strong>Back to Login</strong>
+    </a>
+  </div>
+
+  <!-- Toast Message -->
+  <div *ngIf="message" [ngClass]="messageClass"
+    class="fixed top-20 right-4 sm:right-6 z-50 px-4 py-3 rounded-lg shadow-lg animate-fade-out transition-opacity duration-300"
+    role="alert">
+    <div class="flex items-center gap-2">
+      <i class="fas" [ngClass]="{
+           'fa-check-circle text-green-600': messageClass.includes('bg-green-100'),
+           'fa-exclamation-circle text-red-600': messageClass.includes('bg-red-100'),
+           'fa-info-circle text-blue-600': messageClass.includes('bg-blue-100')
+         }"></i>
+      <span class="text-sm font-medium">{{ message }}</span>
+    </div>
+  </div>
+
+  <!-- Reset Card -->
+  <div class="relative z-10 w-full max-w-xl mx-auto mt-16 mb-10 px-4 sm:px-8">
+
+
+    <!-- Logo -->
+    <div class="flex justify-center mb-6">
+      <img src="assets/logo.png" alt="CampusConnect Logo" class="w-24 sm:w-28 md:w-36 animate-fade-in" />
+    </div>
+
+    <div
+      class="bg-white/90 backdrop-blur-sm rounded-3xl shadow-lg border border-white/50 p-6 sm:p-8 transition duration-300 hover:shadow-xl">
+
+      <!-- Icon & Headings -->
+      <div class="flex flex-col items-center mb-6">
+        <div
+          class="w-14 h-14 sm:w-16 sm:h-16 mb-4 flex items-center justify-center bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-md">
+          <i class="fas fa-lock text-white text-xl sm:text-2xl animate-shake"></i>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-bold text-center text-gray-800">Reset Password</h2>
+        <p class="text-sm text-gray-500 mt-2 text-center">Secure your account in 3 simple steps</p>
+      </div>
+
+      <!-- Progress Indicators -->
+      <div class="relative mb-8">
+        <div class="absolute top-1/2 left-0 w-full h-1.5 bg-gray-100 rounded-full -z-10"></div>
+        <div class="flex justify-between">
+          <ng-container *ngFor="let stepNum of [1, 2, 3]">
+            <div
+              class="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-bold transition-all duration-300"
+              [ngClass]="{
+                   'bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg scale-110': currentStep === stepNum,
+                   'bg-white border-2 border-gray-200 text-gray-400 shadow': currentStep !== stepNum
+                 }">
+              <span [ngClass]="{ 'animate-pulse': currentStep === stepNum }">{{ stepNum }}</span>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+      <!-- Step 1 -->
+      <div *ngIf="currentStep === 1" class="animate-fade-in-up space-y-4">
+        <label class="block text-sm font-medium text-gray-700">Email Address</label>
+        <input type="email" formControlName="email"
+  (input)="sessionStorage.save('forgotPassEmail', form.get('email')?.value)"
+  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" />
+
+        <div *ngIf="form.get('email')?.invalid && (form.get('email')?.touched || form.get('email')?.dirty)"
+          class="text-red-500 text-sm">
+          <span *ngIf="form.get('email')?.errors?.['required']">Email is required.</span>
+          <span *ngIf="form.get('email')?.errors?.['email']">Enter a valid email address.</span>
+        </div>
+
+        <button type="button" (click)="goToStep2()"
+          class="w-full mt-4 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg flex items-center justify-center">
+          <i class="fas fa-paper-plane mr-2"></i> Send Verification Code
+        </button>
+      </div>
+
+      <!-- Step 2 -->
+      <!-- Step 2 - OTP Input -->
+      <div *ngIf="currentStep === 2" class="animate-fade-in-up space-y-4 text-center">
+        <h2 class="text-2xl font-bold">Enter the OTP</h2>
+        <p class="text-sm text-gray-600">Enter 6 digit OTP which we sent to your registered email</p>
+
+        <!-- OTP Input Container -->
+        <div class="w-full flex justify-center mt-4 overflow-x-auto">
+          <div class="flex gap-3 sm:gap-4">
+            <ng-container *ngFor="let otp of otpControls; let i = index">
+              <input type="text" maxlength="1" pattern="[0-9]*"
+                class="w-12 sm:w-14 h-12 sm:h-14 text-center text-2xl font-medium border border-gray-100 rounded-xl shadow-md outline-none focus:ring-2 focus:ring-blue-500"
+                [formControl]="otp" (input)="onOtpInput(i, $event)" (keydown)="onOtpKeydown(i, $event)" #otpInput />
+            </ng-container>
+          </div>
+        </div>
+        <!-- Validation -->
+        <div *ngIf="otpInvalid" class="text-red-500 text-sm mt-2">Please enter all 6 digits.</div>
+
+        <button type="button" (click)="verifyOtp()"
+          class="mt-6 py-2 px-6 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">
+          Submit
+        </button>
+      </div>
+
+      <!-- Step 3 -->
+      <div *ngIf="currentStep === 3" class="animate-fade-in-up space-y-4">
+        <!-- New Password -->
+        <label class="block text-sm font-medium text-gray-700">New Password</label>
+        <div class="relative">
+          <input [type]="showNewPassword ? 'text' : 'password'" formControlName="newPassword"
+            placeholder="At least 8 characters"
+            class="w-full pr-12 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" />
+          <button type="button" (click)="toggleNewPasswordVisibility()" class="absolute right-3 top-3 text-gray-500">
+            <svg *ngIf="!showNewPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            <svg *ngIf="showNewPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.965 9.965 0 012.345-3.568m3.275-2.055A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a9.97 9.97 0 01-4.187 5.095M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18" />
+            </svg>
+          </button>
+        </div>
+        <div
+          *ngIf="form.get('newPassword')?.invalid && (form.get('newPassword')?.touched || form.get('newPassword')?.dirty)"
+          class="text-red-500 text-sm">
+          <span *ngIf="form.get('newPassword')?.errors?.['required']">Password is required.</span>
+          <span *ngIf="form.get('newPassword')?.errors?.['minlength']">Minimum 8 characters.</span>
+        </div>
+
+        <!-- Confirm Password -->
+        <label class="block text-sm font-medium text-gray-700 mt-4">Confirm Password</label>
+        <div class="relative">
+          <input [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword"
+            placeholder="Re-enter your password"
+            class="w-full pr-12 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" />
+          <button type="button" (click)="toggleConfirmPasswordVisibility()"
+            class="absolute right-3 top-3 text-gray-500">
+            <svg *ngIf="!showConfirmPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            <svg *ngIf="showConfirmPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.965 9.965 0 012.345-3.568m3.275-2.055A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a9.97 9.97 0 01-4.187 5.095M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18" />
+            </svg>
+          </button>
+        </div>
+        <div
+          *ngIf="form.get('confirmPassword')?.invalid && (form.get('confirmPassword')?.touched || form.get('confirmPassword')?.dirty)"
+          class="text-red-500 text-sm">
+          Password confirmation is required.
+        </div>
+        <div
+          *ngIf="form.errors?.['mismatch'] && (form.get('confirmPassword')?.touched || form.get('confirmPassword')?.dirty)"
+          class="text-red-500 text-sm">
+          Passwords do not match.
+        </div>
+
+        <button type="button" (click)="resetPassword()"
+          class="w-full mt-4 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg flex items-center justify-center">
+          <i class="fas fa-key mr-2"></i> Reset Password
+        </button>
+      </div>
+    </div>
+  </div>
+</form>

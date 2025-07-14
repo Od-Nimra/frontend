@@ -1,0 +1,94 @@
+<div class="relative min-h-screen bg-[#000103] text-white font-[Poppins,sans-serif] overflow-x-hidden">
+
+  <!-- 💫 Floating Neon Glows -->
+  <div class="absolute -top-32 -left-32 w-[280px] h-[280px] bg-[#0082FB] opacity-20 rounded-full blur-3xl animate-pulse z-0"></div>
+  <div class="absolute top-[60%] -right-40 w-[350px] h-[350px] bg-[#0082FB] opacity-20 rounded-full blur-[150px] animate-pulse z-0"></div>
+
+  <!-- 📦 Main Content -->
+  <div class="relative z-10 p-4 sm:p-6 md:p-10 space-y-12">
+
+    <!-- 🔔 Header -->
+    <div class="flex justify-between items-center">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-bold text-[#0082FB]">Home</h1>
+    <p class="text-sm text-gray-300 mt-1">Welcome back, {{ userName }} 👋</p>
+      </div>
+      <button class="text-[#0082FB] hover:text-[#56b6ff] transition-transform transform hover:scale-110" aria-label="Notifications">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10 2a6 6 0 00-6 6v2c0 .414-.168.79-.44 1.06L2.293 13.293A1 1 0 003 15h14a1 1 0 00.707-1.707L16.44 11.06A1.5 1.5 0 0116 10V8a6 6 0 00-6-6zM6 16a4 4 0 008 0H6z" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- 🎓 Hero Section -->
+    <div class="bg-gradient-to-r from-[#003366]/80 via-[#0082FB]/60 to-[#0082FB]/30 text-white p-6 sm:p-8 md:p-10 rounded-3xl shadow-2xl border border-[#0082FB]/40 backdrop-blur-lg flex flex-col md:flex-row justify-between items-center gap-6 transition hover:shadow-[#0082FB]/30 hover:scale-[1.01]">
+      <div class="text-center md:text-left">
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-[#0082FB] mb-2">Welcome to Student Orbit</h2>
+        <p class="text-lg text-[#c8e8ff]">Stay updated with academics, events & more!</p>
+      </div>
+      <img
+        src="https://pngimg.com/uploads/student/student_PNG62552.png"
+        alt="Students"
+        class="w-32 sm:w-44 md:w-56 drop-shadow-lg hover:drop-shadow-[0_0_20px_#0082FB] transition-transform duration-500"
+      />
+    </div>
+
+    <!-- 📅 Explore Events -->
+    <div>
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl sm:text-2xl font-semibold text-[#0082FB]">Explore Events</h2>
+        <a routerLink="/events" class="text-sm text-[#b3dbff] hover:underline">View All Events</a>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div
+          *ngFor="let event of events"
+          class="bg-[#000103]/80 border border-[#0082FB]/40 rounded-2xl shadow-md backdrop-blur-xl relative overflow-hidden group transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_25px_#0082FB]"
+        >
+          <!-- Floating neon stroke -->
+          <div class="absolute inset-0 rounded-2xl border-2 border-[#0082FB]/20 group-hover:border-[#0082FB] group-hover:shadow-[0_0_30px_#0082FB] transition-all duration-300 pointer-events-none z-0"></div>
+
+          <img
+            [src]="event.image || 'https://via.placeholder.com/400x200'"
+            alt="Event"
+            class="w-full h-40 object-cover rounded-t-2xl relative z-10 group-hover:brightness-110 transition"
+          />
+          <div class="p-4 relative z-10">
+            <h3 class="text-lg font-semibold text-white">{{ event.name }}</h3>
+            <p class="text-sm text-[#c2e9ff] mt-1">📅 {{ event.date | date: 'fullDate' }}</p>
+            <p class="text-sm text-[#94d8ff]">📍 {{ event.location }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 📚 Today’s Classes -->
+    <div>
+      <h2 class="text-xl sm:text-2xl font-semibold text-[#0082FB] mb-4">Today’s Classes</h2>
+      <div *ngIf="todaysClasses.length > 0; else noClasses" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div
+          *ngFor="let c of todaysClasses"
+          class="bg-[#012147]/80 border border-[#0082FB]/30 p-5 rounded-2xl shadow-sm relative overflow-hidden hover:shadow-[0_0_25px_#0082FB] hover:scale-[1.03] transition-all duration-300"
+        >
+          <!-- Floating stroke -->
+          <div class="absolute inset-0 rounded-2xl border border-[#0082FB]/20 hover:border-[#0082FB] pointer-events-none z-0"></div>
+
+          <div class="flex justify-between items-center relative z-10">
+            <span class="font-bold text-white text-base">{{ c.course }}</span>
+            <span class="text-sm text-[#c8e8ff]">{{ c.hour }}</span>
+          </div>
+          <p class="text-sm text-[#c8e8ff] mt-1 relative z-10">🧑‍🏫 {{ c.faculty }}</p>
+          <p class="text-sm text-[#c8e8ff] relative z-10">🚪 Room {{ c.room }}</p>
+        </div>
+      </div>
+      <ng-template #noClasses>
+        <p class="text-[#0082FB] text-sm italic mt-2">No classes scheduled for today 🎉</p>
+      </ng-template>
+    </div>
+
+    <!-- 👣 Footer -->
+    <footer class="pt-10 text-center text-sm text-[#99d8ff]/60 border-t border-[#0082FB]/20 mt-12">
+      Built with 💙 by interns @ KJSDC
+    </footer>
+  </div>
+</div>

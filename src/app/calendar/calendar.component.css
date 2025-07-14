@@ -1,0 +1,7 @@
+/* Example dot and card colors (can be based on event.category/type) */
+.bg-event-red { background-color: #ef4444; }
+.bg-event-green { background-color: #10b981; }
+.bg-event-yellow { background-color: #facc15; }
+.border-l-event-red { border-color: #ef4444; }
+.border-l-event-green { border-color: #10b981; }
+.border-l-event-yellow { border-color: #facc15; }

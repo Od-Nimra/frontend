@@ -1,0 +1,164 @@
+<!-- app-absence.component.html -->
+<div class="min-h-screen bg-[#000103] text-white font-[Poppins,sans-serif] py-8 px-3 sm:px-6 lg:px-10">
+  <div class="max-w-2xl mx-auto bg-[#0a1221]/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-[#0082FB]/30 p-4 sm:p-6 space-y-6">
+
+    <!-- Header + Toggle -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+      <h2 class="text-2xl sm:text-3xl font-bold text-[#0082FB]">📝 Absence Application</h2>
+      <div class="inline-flex bg-[#00152e]/50 rounded-md p-1 shadow-inner">
+        <button (click)="selectedForm = 'leave'" 
+          [ngClass]="{ 
+            'bg-[#0082FB] text-white shadow-[0_0_8px_#0082FB]' : selectedForm==='leave',
+            'text-[#0082FB]' : selectedForm!=='leave' }"
+          class="px-3 py-1 rounded-md text-xs sm:text-sm font-medium transition">Leave</button>
+        <button (click)="selectedForm = 'duty'" 
+          [ngClass]="{ 
+            'bg-[#0082FB] text-white shadow-[0_0_8px_#0082FB]' : selectedForm==='duty',
+            'text-[#0082FB]' : selectedForm!=='duty' }"
+          class="px-3 py-1 rounded-md text-xs sm:text-sm font-medium transition">On‑Duty</button>
+      </div>
+    </div>
+
+    <!-- Leave Form -->
+    <div *ngIf="selectedForm==='leave'" class="space-y-4">
+      <div class="bg-[#00152e] p-4 sm:p-6 rounded-xl border border-[#0082FB]/30 space-y-3">
+        <p class="text-sm sm:text-base">Respected Sir/Madam,</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <input [(ngModel)]="leaveName" placeholder="Your Name" class="input-dark text-sm" />
+          <input [(ngModel)]="leaveClass" placeholder="Class" class="input-dark text-sm" />
+          <input type="date" [(ngModel)]="leaveStart" class="input-dark text-sm" />
+          <input type="date" [(ngModel)]="leaveEnd" class="input-dark text-sm" />
+          <textarea [(ngModel)]="leaveReason" placeholder="Reason" class="textarea-dark text-sm sm:col-span-2"></textarea>
+        </div>
+      </div>
+
+      <label class="block text-[#0082FB] font-medium text-sm">📎 Proof / signed letter</label>
+      <div class="file-drop-dark text-sm" (click)="leaveFileInput.click()">
+        <input type="file" hidden #leaveFileInput (change)="onLeaveFileSelected($event)" />
+        <div *ngIf="!leaveFile" class="text-[#aaa]">📁 Tap to upload</div>
+        <div *ngIf="leaveFile" class="text-[#0082FB] font-medium flex items-center justify-center gap-2">
+          ✅ <span class="truncate max-w-xs">{{ leaveFile.name }}</span>
+          <button (click)="removeLeaveFile()" class="text-red-500 underline text-xs">Remove</button>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button [disabled]="!leaveFile || loading"
+          (click)="submitLeave()"
+          class="btn-dark text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+          Submit Leave
+        </button>
+        <div *ngIf="loading" class="loader-spin"></div>
+      </div>
+
+      <div *ngIf="leaveSubmitted" class="alert-pending-dark text-sm flex items-center justify-between">
+        ⏳ Application pending... 
+        <button class="underline text-[#0082FB] text-xs" (click)="openDetails('leave')">View Details</button>
+      </div>
+    </div>
+
+    <!-- On-Duty Form -->
+    <div *ngIf="selectedForm==='duty'" class="space-y-4">
+      <div class="bg-[#00152e] p-4 sm:p-6 rounded-xl border border-[#0082FB]/30 space-y-3">
+        <p class="text-sm sm:text-base">Respected Sir/Madam,</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <input [(ngModel)]="dutyName" placeholder="Your Name" class="input-dark text-sm" />
+          <input [(ngModel)]="dutyEvent" placeholder="Event/Competition" class="input-dark text-sm" />
+          <input type="date" [(ngModel)]="dutyDate" class="input-dark text-sm" />
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-1 text-xs text-[#ccc]">
+          <label *ngFor="let slot of timeSlots" class="flex items-center gap-1">
+            <input type="checkbox" [(ngModel)]="slot.selected" />
+            <span>{{ slot.time }}</span>
+          </label>
+        </div>
+      </div>
+
+      <label class="block text-[#0082FB] font-medium text-sm">📎 Proof / signed letter</label>
+      <div class="file-drop-dark text-sm" (click)="dutyFileInput.click()">
+        <input type="file" hidden #dutyFileInput (change)="onDutyFileSelected($event)" />
+        <div *ngIf="!dutyFile" class="text-[#aaa]">📁 Tap to upload</div>
+        <div *ngIf="dutyFile" class="text-[#0082FB] font-medium flex items-center justify-center gap-2">
+          ✅ <span class="truncate max-w-xs">{{ dutyFile.name }}</span>
+          <button (click)="removeDutyFile()" class="text-red-500 underline text-xs">Remove</button>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button [disabled]="!dutyFile || loading"
+          (click)="submitDuty()"
+          class="btn-dark text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+          Submit On‑Duty
+        </button>
+        <div *ngIf="loading" class="loader-spin"></div>
+      </div>
+
+      <div *ngIf="dutySubmitted" class="alert-pending-dark text-sm flex items-center justify-between">
+        ⏳ Application pending...
+        <button class="underline text-[#0082FB] text-xs" (click)="openDetails('duty')">View Details</button>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div *ngIf="showToast" class="toast-success-dark text-xs">✅ Submitted!</div>
+
+  </div>
+  
+  <!-- 📲 View Details Drawer -->
+  <div *ngIf="showDetailsModal" class="fixed inset-0 bg-black bg-opacity-60 flex justify-end z-50">
+    <div class="w-80 sm:w-96 bg-[#001728] text-white h-full shadow-2xl p-6 overflow-y-auto">
+      <button (click)="closeDetails()" class="text-xl text-[#ccc] hover:text-red-500 mb-4">← Close</button>
+      <h3 class="text-lg font-semibold text-[#0082FB] mb-4">Application Details</h3>
+      <div class="space-y-2 text-sm text-[#ccc]">
+        <ng-container *ngIf="detailType==='leave'">
+          <p><strong>Name:</strong> {{ leaveName }}</p>
+          <p><strong>Class:</strong> {{ leaveClass }}</p>
+          <p><strong>From:</strong> {{ leaveStart }}</p>
+          <p><strong>To:</strong> {{ leaveEnd }}</p>
+          <p><strong>Reason:</strong> {{ leaveReason }}</p>
+          <p *ngIf="leaveFile"><strong>File:</strong> {{ leaveFile.name }}</p>
+        </ng-container>
+        <ng-container *ngIf="detailType==='duty'">
+          <p><strong>Name:</strong> {{ dutyName }}</p>
+          <p><strong>Event:</strong> {{ dutyEvent }}</p>
+          <p><strong>Date:</strong> {{ dutyDate }}</p>
+          <p *ngIf="dutySlots"><strong>Slots:</strong> {{ dutySlots }}</p>
+          <p *ngIf="dutyFile"><strong>File:</strong> {{ dutyFile.name }}</p>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 📜 Past Applications -->
+<div class="pt-8 border-t border-[#0082FB]/30 mt-12 max-w-2xl mx-auto px-4">
+  <h3 class="text-lg sm:text-xl font-semibold text-[#0082FB] mb-4">📋 Past Applications</h3>
+
+  <div *ngIf="pastApplications.length > 0; else noApplications" class="space-y-4">
+    <div *ngFor="let app of pastApplications" class="bg-[#001728] border border-[#0082FB]/20 rounded-xl p-4 shadow-md text-sm sm:text-base text-white space-y-2">
+      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-0">
+        <h4 class="font-semibold text-[#66b3ff]">
+          {{ app.type === 'leave' ? 'Leave' : 'On‑Duty' }} – {{ app.name }}
+        </h4>
+        <span class="text-xs sm:text-sm px-2 py-1 rounded-full font-medium text-center w-max"
+              [ngClass]="{
+                'bg-yellow-200/20 text-yellow-300': app.status === 'Pending',
+                'bg-green-200/20 text-green-300': app.status === 'Approved',
+                'bg-red-200/20 text-red-400': app.status === 'Rejected'
+              }">
+          {{ app.status }}
+        </span>
+      </div>
+
+      <div class="text-[#ccc] space-y-1">
+        <p *ngIf="app.type === 'leave'"><strong>Dates:</strong> {{ app.from }} → {{ app.to }}</p>
+        <p *ngIf="app.type === 'duty'"><strong>Event:</strong> {{ app.event }} on {{ app.date }}</p>
+        <p *ngIf="app.slots"><strong>Slots:</strong> {{ app.slots }}</p>
+        <p><strong>Reason:</strong> {{ app.reason || 'N/A' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noApplications>
+    <p class="text-[#777] italic text-sm">No previous applications found.</p>
+  </ng-template>
+</div>
